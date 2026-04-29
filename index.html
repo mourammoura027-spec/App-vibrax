@@ -1,0 +1,71 @@
+// =============================== // NIVORA APP - TIKTOK CLONE FULL (EXPO + FIREBASE) // =============================== // ⚠️ Projeto base profissional (não produção final) // Inclui: Auth, Feed, Upload, Follow, Chat, Likes, Comments, Search, Profile
+
+// =============================== // 1. INSTALAÇÃO DEPENDÊNCIAS // =============================== // npm install firebase // npm install expo-image-picker // npm install @react-navigation/native // npm install @react-navigation/bottom-tabs // npm install react-native-screens react-native-safe-area-context
+
+// =============================== // 2. FIREBASE CONFIG // =============================== import { initializeApp } from "firebase/app"; import { getAuth } from "firebase/auth"; import { getFirestore } from "firebase/firestore"; import { getStorage } from "firebase/storage";
+
+const firebaseConfig = { apiKey: "SUA_API_KEY", authDomain: "SEU_AUTH_DOMAIN", projectId: "SEU_PROJECT_ID", storageBucket: "SEU_STORAGE", messagingSenderId: "ID", appId: "ID" };
+
+const app = initializeApp(firebaseConfig); export const auth = getAuth(app); export const db = getFirestore(app); export const storage = getStorage(app);
+
+// =============================== // 3. APP PRINCIPAL // =============================== import React, { useState, useEffect } from "react"; import { View, Text, FlatList, TouchableOpacity, TextInput } from "react-native";
+
+const mockFeed = [ { id: "1", user: "@nivora", text: "Bem-vindo ao Nivora 🔥", likes: 10 }, { id: "2", user: "@player1", text: "Gameplay insano 😎", likes: 55 }, ];
+
+export default function App() { const [tab, setTab] = useState("home"); const [user, setUser] = useState(null); const [search, setSearch] = useState("");
+
+// =============================== // FEED (TikTok style) // =============================== const Feed = () => ( <FlatList data={mockFeed} keyExtractor={(i) => i.id} renderItem={({ item }) => ( <View style={{ padding: 16, borderBottomWidth: 1 }}> <Text style={{ fontWeight: "bold" }}>{item.user}</Text> <Text>{item.text}</Text>
+
+<View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+        <Text>❤️ {item.likes}</Text>
+        <Text>💬</Text>
+        <Text>🔁</Text>
+        <Text>🔖</Text>
+      </View>
+    </View>
+  )}
+/>
+
+);
+
+// =============================== // SEARCH // =============================== const Search = () => ( <View style={{ padding: 16 }}> <TextInput placeholder="Pesquisar usuários ou vídeos" value={search} onChangeText={setSearch} style={{ borderWidth: 1, padding: 10, borderRadius: 10 }} /> <Text>Resultado: {search}</Text> </View> );
+
+// =============================== // UPLOAD (vídeo/foto/live base) // =============================== const Upload = () => ( <View style={{ padding: 16 }}> <Text style={{ fontSize: 20, fontWeight: "bold" }}>Criar Conteúdo</Text>
+
+<TouchableOpacity><Text>📷 Tirar Foto</Text></TouchableOpacity>
+  <TouchableOpacity><Text>🎥 Gravar Vídeo</Text></TouchableOpacity>
+  <TouchableOpacity><Text>🔴 Fazer Live (futuro WebRTC)</Text></TouchableOpacity>
+  <TouchableOpacity><Text>🎵 Música</Text></TouchableOpacity>
+</View>
+
+);
+
+// =============================== // CHAT (base Firestore) // =============================== const Chat = () => ( <View style={{ padding: 16 }}> <Text style={{ fontSize: 18 }}>Chat</Text> <Text>💬 Mensagens em tempo real (Firebase)</Text> </View> );
+
+// =============================== // PROFILE // =============================== const Profile = () => ( <View style={{ padding: 16 }}> <Text style={{ fontSize: 22 }}>Perfil</Text> <Text>Seguidores: 0</Text> <Text>Seguindo: 0</Text> <Text>Vídeos: 0</Text> </View> );
+
+// =============================== // LOGIN (Firebase Auth futuro) // =============================== const Login = () => ( <View style={{ padding: 16 }}> <Text style={{ fontSize: 20 }}>Login Nivora</Text> <Text>Firebase Auth (email / google)</Text> </View> );
+
+return ( <View style={{ flex: 1, paddingTop: 40 }}>
+
+{/* NAVBAR */}
+  <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+    <TouchableOpacity onPress={() => setTab("home")}><Text>Home</Text></TouchableOpacity>
+    <TouchableOpacity onPress={() => setTab("search")}><Text>Buscar</Text></TouchableOpacity>
+    <TouchableOpacity onPress={() => setTab("upload")}><Text>Criar</Text></TouchableOpacity>
+    <TouchableOpacity onPress={() => setTab("chat")}><Text>Chat</Text></TouchableOpacity>
+    <TouchableOpacity onPress={() => setTab("profile")}><Text>Perfil</Text></TouchableOpacity>
+  </View>
+
+  {tab === "home" && <Feed />}
+  {tab === "search" && <Search />}
+  {tab === "upload" && <Upload />}
+  {tab === "chat" && <Chat />}
+  {tab === "profile" && <Profile />}
+  {tab === "login" && <Login />}
+
+</View>
+
+); }
+
+// =============================== // 4. PRÓXIMO NÍVEL (O QUE FALTA PRA VIRAR TIKTOK REAL) // =============================== // ✔ Firebase Auth completo // ✔ Upload de vídeo real (Storage) // ✔ Feed algoritmo (For You) // ✔ Sistema de follow/unfollow // ✔ Comentários reais // ✔ Likes em tempo real // ✔ Chat privado // ✔ Notificações push // ✔ Live streaming (WebRTC) // ✔ APK final com EAS Build
